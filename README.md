@@ -1,6 +1,7 @@
 # ring.middleware.prefer
 
-Ring middleware providing RFC7240 (Prefer Header for HTTP) support
+Ring middleware providing
+[RFC7240 (Prefer Header for HTTP)](http://tools.ietf.org/html/rfc7240) support
 
 ## License
 
