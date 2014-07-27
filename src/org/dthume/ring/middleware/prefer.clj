@@ -17,6 +17,7 @@
 
 (def ^:private instaparse-prefer-header
   (insta/parser "
+S         = prefer (<WS?> <','> prefer)*
 prefer    = <WS?> token value? (<WS?> <';'> <WS?> parameter)*
 parameter = token value?
 <value>   = <WS?> <'='> <WS?> word
@@ -24,9 +25,9 @@ parameter = token value?
 <token>   = #'[a-zA-Z!#\\$%&\\'\\*\\+\\-\\.\\^_`\\|~]+'
 <WS>      = #'\\s+'"))
 
-(defn parse-prefer-header
-  [^String v]
-  (let [[_ n & r] (instaparse-prefer-header v)
+(defn- as-preference
+  [pref]
+  (let [[_ n & r] pref
         [v p]     (if (string? (first r))
                     (tuple (first r) (rest r))
                     (tuple nil r))
@@ -35,9 +36,16 @@ parameter = token value?
                        (into {}))]
     (->Preference n v ps)))
 
+(defn parse-prefer-header
+  [^String v]
+  (->> (instaparse-prefer-header v)
+       rest
+       (r/map as-preference)
+       (into [])))
+
 (defn wrap-prefer-header
   [req v]
-  (update-in req [:prefer] (fnil conj [])
+  (update-in req [:prefer] (fnil into [])
              (parse-prefer-header v)))
 
 (defn wrap-prefer-headers

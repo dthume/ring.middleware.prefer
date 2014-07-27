@@ -19,11 +19,11 @@
  ?input                                 ?expected
  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
  
- "respond-async; me=you; them=us"       (pref "respond-async"
-                                              {"me" "you"
-                                               "them" "us"})
- "another-v=\"foo\""                    (pref "another-v" "foo" {})
- "p=v"                                  (pref "p" "v" {}))
+ "respond-async; me=you; them=us"       [(pref "respond-async"
+                                                {"me" "you"
+                                                 "them" "us"})]
+ "another-v=\"foo\""                    [(pref "another-v" "foo" {})]
+ "p=v"                                  [(pref "p" "v" {})])
 
 (fact "wrap-prefer adds `:prefer` key to request based on `Prefer` header"
   (-> (request :get "/foo")
