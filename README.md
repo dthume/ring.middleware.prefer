@@ -3,6 +3,8 @@
 Ring middleware providing
 [RFC7240 (Prefer Header for HTTP)](http://tools.ietf.org/html/rfc7240) support
 
+[![Build Status](https://travis-ci.org/dthume/ring.middleware.prefer.svg?branch=master)](https://travis-ci.org/dthume/ring.middleware.prefer)
+
 ## License
 
 Copyright (C) 2014 David Thomas Hume.
