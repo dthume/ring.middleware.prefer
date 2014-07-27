@@ -44,7 +44,7 @@ parameter = token value?
   [req vs]
   (if (string? vs)
     (wrap-prefer-header req vs)
-    (reduce wrap-prefer-header vs)))
+    (r/reduce wrap-prefer-header req vs)))
 
 (defn wrap-prefer
   [f]

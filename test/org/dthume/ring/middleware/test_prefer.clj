@@ -9,13 +9,25 @@
 (def handler (-> basic-handler
                  wrap-prefer))
 
-(fact "parse-prefer-header works on strings"
-  (parse-prefer-header "respond-async; me=you; them=us")
-  => (preference "respond-async" {"me" "you" "them" "us"}))
+(def pref preference)
+
+(tabular
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ (fact "parse-prefer-header works on strings"
+   (parse-prefer-header ?input) => ?expected)
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ ?input                                 ?expected
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ 
+ "respond-async; me=you; them=us"       (pref "respond-async"
+                                              {"me" "you"
+                                               "them" "us"})
+ "another-v=\"foo\""                    (pref "another-v" "foo" {})
+ "p=v"                                  (pref "p" "v" {}))
 
 (fact "wrap-prefer adds `:prefer` key to request based on `Prefer` header"
   (-> (request :get "/foo")
       (header "Prefer" "return=minimal; foo=\"some parameter\"")
       handler)
-  => (contains {:prefer [(preference "return" "minimal"
-                                     {"foo" "some parameter"})]}))
+  => (contains {:prefer [(pref "return" "minimal"
+                               {"foo" "some parameter"})]}))
