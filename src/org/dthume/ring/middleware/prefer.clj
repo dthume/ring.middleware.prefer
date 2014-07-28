@@ -25,6 +25,10 @@ parameter = token value?
 <token>   = #'[a-zA-Z0-9!#\\$%&\\'\\*\\+\\-\\.\\^_`\\|~]+'
 <WS>      = #'\\s+'"))
 
+(defn- keep-first-param
+  [m [k v]]
+  (if (contains? m k) m (assoc m k v)))
+
 (defn- as-preference
   [pref]
   (let [[_ n & r] pref
@@ -33,7 +37,7 @@ parameter = token value?
                     (tuple nil r))
         ps        (->> p
                        (r/map (fn [x] (tuple (nth x 1) (nth x 2))))
-                       (into {}))]
+                       (r/reduce keep-first-param {}))]
     (->Preference n v ps)))
 
 (defn- keep-first-prefer-header
