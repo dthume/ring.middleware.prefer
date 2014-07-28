@@ -18,11 +18,11 @@
 (def ^:private instaparse-prefer-header
   (insta/parser "
 S         = prefer (<WS?> <','> prefer)*
-prefer    = <WS?> token value? (<WS?> <';'> <WS?> parameter)*
+prefer    = <WS?> token value? (<WS?> <';'> <WS?> parameter)* <WS?>
 parameter = token value?
 <value>   = <WS?> <'='> <WS?> word
 <word>    = <'\"'> #'[^\\\"]+' <'\"'> | token
-<token>   = #'[a-zA-Z!#\\$%&\\'\\*\\+\\-\\.\\^_`\\|~]+'
+<token>   = #'[a-zA-Z0-9!#\\$%&\\'\\*\\+\\-\\.\\^_`\\|~]+'
 <WS>      = #'\\s+'"))
 
 (defn- as-preference
@@ -36,17 +36,27 @@ parameter = token value?
                        (into {}))]
     (->Preference n v ps)))
 
+(defn- keep-first-prefer-header
+  [m {:keys [name] :as h}]
+  (cond-> m
+    (not (contains? m name)) (assoc name h)))
+
 (defn parse-prefer-header
   [^String v]
-  (->> (instaparse-prefer-header v)
-       rest
-       (r/map as-preference)
-       (into [])))
+  (let [p (instaparse-prefer-header v)]
+    (if (insta/failure? p)
+      nil
+      (->> p
+           rest
+           (r/map as-preference)
+           (r/reduce keep-first-prefer-header {})))))
 
 (defn wrap-prefer-header
   [req v]
-  (update-in req [:prefer] (fnil into [])
-             (parse-prefer-header v)))
+  (if-let [pv (parse-prefer-header v)]
+    (update-in req [:prefer] #(if %1 (into %2 %1) %2)
+               pv)
+    req))
 
 (defn wrap-prefer-headers
   [req vs]
@@ -58,6 +68,5 @@ parameter = token value?
   [f]
   (fn [req]
     (let [h (get-in req [:headers "prefer"])]
-      (cond-> req
-        h     (wrap-prefer-headers h)
-        true  f))))
+      (f (cond-> req
+           h     (wrap-prefer-headers h))))))
