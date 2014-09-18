@@ -21,7 +21,7 @@ S         = prefer (<WS?> <','> prefer)*
 prefer    = <WS?> token value? (<WS?> <';'> <WS?> parameter)* <WS?>
 parameter = token value?
 <value>   = <WS?> <'='> <WS?> word
-<word>    = <'\"'> #'[^\\\"]+' <'\"'> | token
+<word>    = <'\"'> #'[^\\\"]*' <'\"'> | token
 <token>   = #'[a-zA-Z0-9!#\\$%&\\'\\*\\+\\-\\.\\^_`\\|~]+'
 <WS>      = #'\\s+'"))
 

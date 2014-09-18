@@ -10,7 +10,7 @@
           :output-dir "doc/codox"}
 
   :dependencies [[org.clojure/clojure "1.6.0"]
-                 [clj-tuple "0.1.5"]
+                 [clj-tuple "0.1.6"]
                  [instaparse "1.3.3"]]
 
   :javac-options ["-target" "1.6" "-source" "1.6"]

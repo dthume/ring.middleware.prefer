@@ -26,6 +26,8 @@
 
  "p=v"                                 {"p" (p "p" "v" {})}
 
+ "p=\"\""                              {"p" (p "p" "" {})}
+
  "return=minimal; foo=\"some param\""  {"return" (p "return" "minimal"
                                                     {"foo" "some param"})})
 
