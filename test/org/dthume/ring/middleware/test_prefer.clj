@@ -36,4 +36,5 @@
       (header "Prefer" "return=minimal; foo=\"some parameter\"")
       handler)
   => (contains {:prefer {"return" (p "return" "minimal"
-                                     {"foo" "some parameter"})}}))
+                                     {"foo" "some parameter"})}
+                :headers (contains {"Preference-Applied" ["return=minimal"]})}))
