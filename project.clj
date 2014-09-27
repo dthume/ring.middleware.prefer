@@ -29,7 +29,7 @@
   :aliases
   {"ci-build"
    ^{:doc "Perform CI build"}
-   ["do" ["clean"] ["check"]]
+   ["do" ["clean"] ["check"] ["midje"]]
    
    "dev-repl"
    ^{:doc "Start a clean development NREPL session"}

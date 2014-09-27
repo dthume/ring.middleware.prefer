@@ -12,7 +12,7 @@ Ring middleware providing
 ## Usage
 
 The `org.dthume.ring.middleware.prefer/wrap-prefer` function can be used to
-wrap a handler with middleware which will check the incoming response for
+wrap a handler with middleware which will check the incoming request map for
 `Prefer` headers, parse them according to RFC7240, and add them to the request
 under the key `:prefer`, whose value will be a map of preference names to
 preference instances.
@@ -33,9 +33,10 @@ primary keys:
 Note that all values (preference name, value, param names and param values) are
 strings.
 
-## TODO
-
-- Add `Preference-Applied` support for responses
+The response map may contain a `:prefer` key, whose value may be a single
+`Preference` instance, a map with `Preference` values, or collection of
+`Preference` instances. These preferences will be used to add
+`Preference-Applied` headers to the response map.
 
 ## License
 
