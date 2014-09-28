@@ -9,6 +9,12 @@ Ring middleware providing
 
 [![Clojars Project](http://clojars.org/org.dthume/ring.middleware.prefer/latest-version.svg)](http://clojars.org/org.dthume/ring.middleware.prefer)
 
+## API Docs
+
+[codox](https://github.com/weavejester/codox)
+generated documentation can be found
+[here](http://dthume.github.io/ring.middleware.prefer/codox/index.html).
+
 ## Usage
 
 The `org.dthume.ring.middleware.prefer/wrap-prefer` function can be used to

@@ -92,28 +92,31 @@ parameter = token value?
                     (fnil into [])))))
 
 (defn prefer-request
-  [req]
-  (if-let [h (get-in req (tuple :headers "prefer"))]
-    (extract-prefer-headers req h)
-    req))
-
-(defn prefer-response
-  [resp]
-  (if-let [prefs (get resp :prefer)]
-    (add-preference-applied-headers resp prefs)
-    resp))
-
-(defn wrap-prefer
-  "Wrap `handler` with middleware for dealing with RFC 7240 preference headers
-in both request and response maps.
+  "Apply RFC 7240 handling to `request` map.
 
 `Prefer` request headers will be parsed into `Preference` record instances and
 added to the request map under the key `:prefer` as a map of preference
-name -> `Preference`.
+name -> `Preference`."
+  [request]
+  (if-let [h (get-in request (tuple :headers "prefer"))]
+    (extract-prefer-headers request h)
+    request))
+
+(defn prefer-response
+  "Apply RFC 7240 handling to `response` map.
 
 The response map may contain a `:prefer` key, whose value may be a single
 `Preference` instance, a map with `Preference` values, or collection of
 `Preference` instances. These preferences will be used to add
 `Preference-Applied` headers to the response map."
+  [response]
+  (if-let [prefs (get response :prefer)]
+    (add-preference-applied-headers response prefs)
+    response))
+
+(defn wrap-prefer
+  "Wrap `handler` with middleware for dealing with RFC 7240 preference headers
+in both request and response maps. See [[prefer-request]] and
+[[prefer-response]] for more details on request / response handling."
   [handler]
   (comp prefer-response handler prefer-request))
