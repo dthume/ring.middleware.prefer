@@ -1,4 +1,10 @@
-(ns ^{:author "David Thomas Hume"}
+(ns ^{:author "David Thomas Hume"
+      :doc "Ring middleware providing
+[RFC7240 (Prefer Header for HTTP)](http://tools.ietf.org/html/rfc7240) support.
+
+Most users will only need to add [[wrap-prefer]] to their middleware stack,
+although [[prefer-request]] and [[prefer-response]] may be useful for
+[Pedestal](https://github.com/pedestal/pedestal) interceptors."}
   org.dthume.ring.middleware.prefer
   (:require [clojure.core.reducers :as r]
             [clj-tuple :refer [tuple]]
@@ -6,16 +12,29 @@
 
 (defrecord Preference [name value params])
 
+(alter-meta! #'->Preference assoc :no-doc true)
+(alter-meta! #'map->Preference assoc :no-doc true)
+
 (defn preference
-  "Construct a preference, with an optional value and / or map of parameters"
+  "Construct a `Preference`, with mandatory `name` and an optional `value`
+and / or `paramMap`. `Preference` records have three keys:
+
+`name`
+: The name of the preference.
+
+`value`
+: The primary value of the preference, or `nil` if there is none.
+
+`params`
+: A map of any secondary parameters specified by the preference."
   ([name]
      (preference name nil {}))
-  ([name valueOrParams]
-     (if (string? valueOrParams)
-       (preference name valueOrParams {})
-       (preference name nil valueOrParams)))
-  ([name value params]
-     (->Preference name value params)))
+  ([name stringValueOrParamMap]
+     (if (string? stringValueOrParamMap)
+       (preference name stringValueOrParamMap {})
+       (preference name nil stringValueOrParamMap)))
+  ([name value paramMap]
+     (->Preference name value paramMap)))
 
 (defn preference?
   "Return `true` iff `p` is a `Preference` record instance."
@@ -53,6 +72,8 @@ parameter = token value?
     (not (contains? m name)) (assoc name h)))
 
 (defn parse-prefer-header
+  "Parse one or more `Prefer` headers into a map of preference names to
+`Preference` instances."
   [^String v]
   (let [p (instaparse-prefer-header v)]
     (if (insta/failure? p)
