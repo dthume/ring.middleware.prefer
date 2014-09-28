@@ -33,8 +33,8 @@ and / or `paramMap`. `Preference` records have three keys:
      (if (string? stringValueOrParamMap)
        (preference name stringValueOrParamMap {})
        (preference name nil stringValueOrParamMap)))
-  ([name value paramMap]
-     (->Preference name value paramMap)))
+  ([name value params]
+     (->Preference name value params)))
 
 (defn preference?
   "Return `true` iff `p` is a `Preference` record instance."

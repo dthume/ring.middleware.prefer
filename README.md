@@ -47,4 +47,5 @@ The response map may contain a `:prefer` key, whose value may be a single
 ## License
 
 Copyright (C) 2014 David Thomas Hume.
+
 Distributed under the Eclipse Public License, the same as Clojure.
