@@ -9,7 +9,6 @@
         :url "github.com/dthume/ring.middleware.prefer"}
 
   :plugins [[codox "0.8.10"]
-            [lein-marginalia "0.7.1"]
             [lein-midje "3.0.0"]]
 
   :codox {:defaults {:doc/format :markdown}
