@@ -1,4 +1,4 @@
-(defproject org.dthume/ring.middleware.prefer "0.1.1-SNAPSHOT"
+(defproject org.dthume/ring.middleware.prefer "0.1.1"
   :description "Ring middleware providing RFC7240 (Prefer Header for HTTP) support."
   :url "http://github.com/dthume/ring.middleware.prefer"
 
