@@ -17,11 +17,12 @@ generated documentation can be found
 
 ## Usage
 
-The `org.dthume.ring.middleware.prefer/wrap-prefer` function can be used to
-wrap a handler with middleware which will check the incoming request map for
-`Prefer` headers, parse them according to RFC7240, and add them to the request
-under the key `:prefer`, whose value will be a map of preference names to
-preference instances.
+The
+[`wrap-prefer`](http://dthume.github.io/ring.middleware.prefer/codox/org.dthume.ring.middleware.prefer.html#var-wrap-prefer)
+function can be used to wrap a handler with middleware which will check the
+incoming request map for `Prefer` headers, parse them according to RFC7240,
+and add them to the request under the key `:prefer`, whose value will be a map
+of preference names to preference instances.
 
 Each preference is an instance of the
 `org.dthume.ring.middleware.prefer/Preference` record type, which defines three

@@ -7,7 +7,6 @@ although [[prefer-request]] and [[prefer-response]] may be useful for
 [Pedestal](https://github.com/pedestal/pedestal) interceptors."}
   org.dthume.ring.middleware.prefer
   (:require [clojure.core.reducers :as r]
-            [clj-tuple :refer [tuple]]
             [instaparse.core :as insta]))
 
 (defrecord Preference [name value params])
@@ -59,10 +58,10 @@ parameter = token value?
   [pref]
   (let [[_ n & r] pref
         [v p]     (if (string? (first r))
-                    (tuple (first r) (rest r))
-                    (tuple nil r))
+                    [(first r) (rest r)]
+                    [nil r])
         ps        (->> p
-                       (r/map (fn [x] (tuple (nth x 1) (nth x 2))))
+                       (r/map (fn [x] [(nth x 1) (nth x 2)]))
                        (r/reduce keep-first-param {}))]
     (->Preference n v ps)))
 
@@ -86,7 +85,7 @@ parameter = token value?
 (defn- extract-prefer-header
   [req v]
   (if-let [pv (parse-prefer-header v)]
-    (update-in req (tuple :prefer) #(if %1 (into %2 %1) %2) pv)
+    (update-in req [:prefer] #(if %1 (into %2 %1) %2) pv)
     req))
 
 (defn- extract-prefer-headers
@@ -104,12 +103,12 @@ parameter = token value?
 (defn- add-preference-applied-headers
   [resp prefs]
   (let [prefs (cond
-               (preference? prefs) (tuple prefs)
+               (preference? prefs) [prefs]
                (map? prefs)        (vals prefs)
                :else               prefs)]
     (->> prefs
          (r/map as-preference-applied)
-         (update-in resp (tuple :headers "Preference-Applied")
+         (update-in resp [:headers "Preference-Applied"]
                     (fnil into [])))))
 
 (defn prefer-request
@@ -119,7 +118,7 @@ parameter = token value?
 added to the request map under the key `:prefer` as a map of preference
 name -> `Preference`."
   [request]
-  (if-let [h (get-in request (tuple :headers "prefer"))]
+  (if-let [h (get-in request [:headers "prefer"])]
     (extract-prefer-headers request h)
     request))
 
